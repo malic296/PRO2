@@ -1,0 +1,78 @@
+-- Drop tables if they exist in the correct order (starting with the ones that depend on others)
+DROP TABLE IF EXISTS user_run CASCADE;
+DROP TABLE IF EXISTS user_race CASCADE;
+DROP TABLE IF EXISTS run CASCADE;
+DROP TABLE IF EXISTS race CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS team CASCADE;
+
+-- Create the "team" table (stores team names: Red, Green, Blue)
+CREATE TABLE team (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE
+);
+
+-- Insert teams (Red, Green, Blue)
+INSERT INTO team (name) VALUES ('Red'), ('Green'), ('Blue');
+
+-- Create the "users" table (with a foreign key to the team table)
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    encrypted_password VARCHAR(255) NOT NULL,
+    is_admin BOOLEAN NOT NULL,
+    team_id INT,  -- Foreign key referencing the "team" table
+    FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE SET NULL  -- Foreign key to team table
+);
+
+-- Create the "run" table
+CREATE TABLE run (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    address VARCHAR(255),
+    date TIMESTAMP NOT NULL
+);
+
+-- Fast insert into the "run" table (insert multiple runs)
+INSERT INTO run (name, description, address, date) VALUES
+    ('5K Charity Run', 'A charity run event', 'Central Park', '2025-06-01 08:00:00'),
+    ('Marathon', 'A 42.195km marathon', 'Downtown', '2025-07-10 07:00:00'),
+    ('Relay Race', 'Team relay race', 'Stadium A', '2025-08-15 09:00:00');
+
+-- Create the "race" table
+CREATE TABLE race (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    address VARCHAR(255),
+    date TIMESTAMP NOT NULL,
+    capacity INT NOT NULL
+);
+
+-- Fast insert into the "race" table (insert multiple races)
+INSERT INTO race (name, description, address, date, capacity) VALUES
+    ('Summer Sprint', 'A short race for speed enthusiasts', 'Race Track A', '2025-06-05 10:00:00', 100),
+    ('Night Run', 'A race to be run in the evening with lights', 'City Center', '2025-06-20 19:00:00', 200),
+    ('Cross Country Challenge', 'An off-road race with various obstacles', 'Mountain Trail', '2025-07-25 07:30:00', 150);
+
+-- Create the "user_run" table (many-to-many relationship between "users" and "run")
+CREATE TABLE user_run (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    run_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (run_id) REFERENCES run (id) ON DELETE CASCADE,
+    CONSTRAINT user_run_unique UNIQUE (user_id, run_id) -- Prevents duplicate entries for the same user and run
+);
+
+-- Create the "user_race" table (many-to-many relationship between "users" and "race")
+CREATE TABLE user_race (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    race_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (race_id) REFERENCES race (id) ON DELETE CASCADE,
+    CONSTRAINT user_race_unique UNIQUE (user_id, race_id) -- Prevents duplicate entries for the same user and race
+);
+
