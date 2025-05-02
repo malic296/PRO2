@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+  <script src="../static/myScripts.js"></script>
+
+  <title th:text="${title}">Race For Life</title>
+
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Race For Life</a>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/myStats">My Stats</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/runs">Runs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/races">Races</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/teams">Teams</a>
+      </li>
+      <li class="nav-item">
+        <form action="/logout" method="post" style="display: inline;">
+          <button type="submit" class="btn btn-link nav-link" style="border: none; background: none; color: inherit; font-size: inherit;">Logout</button>
+        </form>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <div th:replace="${content}"></div>
+</div>
+
+</body>
+</html>

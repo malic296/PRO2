@@ -1,0 +1,144 @@
+<div class="container mt-5">
+    <h2>Runs</h2>
+
+    <!-- Button to open the Create Run modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createRunModal">
+        Create Run
+    </button>
+
+    <!-- Runs Table -->
+    <table class="table table-bordered mt-3">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Address</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="run : ${allRuns}">
+            <td th:text="${run.name}"></td>
+            <td th:text="${run.description}"></td>
+            <td th:text="${run.address}"></td>
+            <td th:text="${run.getFormattedDate()}"></td>
+            <td class="d-flex gap-1">
+                <!-- Action Button -->
+                <form th:action="@{/runs/action}" method="post" th:object="${run}">
+                    <input type="hidden" th:name="runId" th:value="${run.id}" />
+                    <button type="submit"
+                            th:class="${false} ? 'btn btn-success btn-sm' : 'btn btn-outline-danger btn-sm'">
+                        <i th:class="${false} ? 'bi bi-check-circle' : 'bi bi-plus-circle'"></i>
+                        <span th:text="${false} ? 'Leave' : 'Join'"></span>
+                    </button>
+                </form>
+
+                <!-- Edit Button (opens modal and sets data attributes) -->
+                <button class="btn btn-warning btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editRunModal"
+                        th:attr="data-id=${run.id},
+                         data-name=${run.name},
+                         data-description=${run.description},
+                         data-address=${run.address},
+                         data-date=${run.getFormattedDateForInput()}">
+                    Edit
+                </button>
+
+                <!-- Delete Button -->
+                <form th:action="@{/runs/delete}" method="post">
+                    <input type="hidden" th:name="runId" th:value="${run.id}" />
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Create Run Modal -->
+<div class="modal fade" id="createRunModal" tabindex="-1" aria-labelledby="createRunModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createRunModalLabel">Create New Run</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form action="/runs/create" method="post">
+                    <div class="mb-3">
+                        <label for="runName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="runName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="runDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="runDescription" name="description" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="runAddress" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="runAddress" name="address" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="runDate" class="form-label">Date</label>
+                        <input type="datetime-local" class="form-control" id="runDate" name="date" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Run</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Run Modal -->
+<div class="modal fade" id="editRunModal" tabindex="-1" aria-labelledby="editRunModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/runs/edit" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editRunModalLabel">Edit Run</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editRunId" name="id">
+                    <div class="mb-3">
+                        <label for="editRunName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="editRunName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editRunDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="editRunDescription" name="description" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editRunAddress" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="editRunAddress" name="address" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editRunDate" class="form-label">Date</label>
+                        <input type="datetime-local" class="form-control" id="editRunDate" name="date" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const editModal = document.getElementById('editRunModal');
+        editModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            document.getElementById('editRunId').value = button.getAttribute('data-id');
+            document.getElementById('editRunName').value = button.getAttribute('data-name');
+            document.getElementById('editRunDescription').value = button.getAttribute('data-description');
+            document.getElementById('editRunAddress').value = button.getAttribute('data-address');
+            document.getElementById('editRunDate').value = button.getAttribute('data-date');
+        });
+    });
+</script>
+
