@@ -41,10 +41,13 @@ public class AuthController {
         boolean isAuthenticated = userService.authenticateUser(email, password);
         if (isAuthenticated) {
             model.addAttribute("content", "myStats.html");
-            int x = 3;
-            List<Integer> numbers = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
-            model.addAttribute("test", numbers);
             session.setAttribute("userEmail", email);
+            if(userService.isAdmin(email)){
+                session.setAttribute("isAdmin", true);
+            }
+            else{
+                session.setAttribute("isAdmin", false);
+            }
             return "main";
         } else {
             model.addAttribute("error", "Invalid credentials");
@@ -67,6 +70,7 @@ public class AuthController {
         try {
             userService.registerUser(email, password, team);
             session.setAttribute("userEmail", email);
+            session.setAttribute("isAdmin", false);
             model.addAttribute("content", "myStats.html");
             return "main";
         } catch (RuntimeException e) {
@@ -78,19 +82,6 @@ public class AuthController {
     @GetMapping("/main")
     public String main() {
         return "main";
-    }
-
-    @GetMapping("/runs")
-    public String runs(HttpSession session, Model model) {
-        String userEmail = (String) session.getAttribute("userEmail");
-        List<Run> runs = runService.getAllRuns();
-        model.addAttribute("allRuns", runs);
-        if (userEmail != null) {
-            model.addAttribute("content", "runs.html");
-            return "main";
-        } else {
-            return "redirect:/login";
-        }
     }
 
     @GetMapping("/races")

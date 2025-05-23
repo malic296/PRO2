@@ -15,6 +15,7 @@ public class Run {
     private String description;
     private String address;
     private LocalDateTime date;
+    private String creator;
 
     // Default constructor
     public Run() {
@@ -31,6 +32,14 @@ public class Run {
     // Getters and setters
     public Long getId() {
         return id;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public void setId(Long id) {

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
 
 @Service
 public class RunService {
@@ -20,12 +21,23 @@ public class RunService {
         return runRepository.findAll();
     }
 
-    public void createRun(String name, String description, String address, LocalDateTime date){
+    public List<Run> getUpcomingRuns() {
+        LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
+        return runRepository.findByDateAfterOrderByDateAsc(startOfToday);
+    }
+
+    public List<Run> getPastRuns() {
+        LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
+        return runRepository.findByDateBeforeOrderByDateDesc(startOfToday);
+    }
+
+    public void createRun(String name, String description, String address, LocalDateTime date, String creator) {
         Run run = new Run();
         run.setName(name);
         run.setDescription(description);
         run.setAddress(address);
         run.setDate(date);
+        run.setCreator(creator);
 
         runRepository.save(run);
     }
@@ -48,6 +60,11 @@ public class RunService {
     public void deleteRun(long id){
         runRepository.deleteById(id);
     }
+
+    public Optional<Run> getRunById(Long id) {
+        return runRepository.findById(id);
+    }
+
 
 
 }

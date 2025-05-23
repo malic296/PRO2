@@ -37,5 +37,19 @@ public class UserService {
         User user = userOptional.get();
         return PasswordUtils.verifyPassword(password, user.getEncryptedPassword());
     }
+
+    public boolean isAdmin(String email){
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        User user = userOptional.get();
+        if(user.isAdmin()){
+            return true;
+        }
+        return false;
+
+    };
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }
 

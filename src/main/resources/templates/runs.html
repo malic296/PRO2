@@ -24,35 +24,40 @@
             <td th:text="${run.description}"></td>
             <td th:text="${run.address}"></td>
             <td th:text="${run.getFormattedDate()}"></td>
-            <td class="d-flex gap-1">
-                <!-- Action Button -->
-                <form th:action="@{/runs/action}" method="post" th:object="${run}">
-                    <input type="hidden" th:name="runId" th:value="${run.id}" />
-                    <button type="submit"
-                            th:class="${false} ? 'btn btn-success btn-sm' : 'btn btn-outline-danger btn-sm'">
-                        <i th:class="${false} ? 'bi bi-check-circle' : 'bi bi-plus-circle'"></i>
-                        <span th:text="${false} ? 'Leave' : 'Join'"></span>
-                    </button>
-                </form>
+            <td>
+                <div class="d-flex flex-wrap gap-1 align-items-center">
+                    <!-- Join/Leave Button -->
+                    <form th:action="@{/runs/toggle}" method="post">
+                        <input type="hidden" name="runId" th:value="${run.id}" />
+                        <button type="submit"
+                                th:text="${joinedRunIds.contains(run.id) ? 'Leave Run' : 'Join Run'}">
+                        </button>
+                    </form>
 
-                <!-- Edit Button (opens modal and sets data attributes) -->
-                <button class="btn btn-warning btn-sm"
-                        data-bs-toggle="modal"
-                        data-bs-target="#editRunModal"
-                        th:attr="data-id=${run.id},
-                         data-name=${run.name},
-                         data-description=${run.description},
-                         data-address=${run.address},
-                         data-date=${run.getFormattedDateForInput()}">
-                    Edit
-                </button>
+                    <!-- Admin/Creator Buttons (Edit & Delete) -->
+                    <div th:if="${userEmail == run.creator or isAdmin}" class="d-flex gap-1 m-0">
+                        <!-- Edit Button -->
+                        <button class="btn btn-warning btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editRunModal"
+                                th:attr="data-id=${run.id},
+                             data-name=${run.name},
+                             data-description=${run.description},
+                             data-address=${run.address},
+                             data-date=${run.getFormattedDateForInput()}">
+                            Edit
+                        </button>
 
-                <!-- Delete Button -->
-                <form th:action="@{/runs/delete}" method="post">
-                    <input type="hidden" th:name="runId" th:value="${run.id}" />
-                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                </form>
+                        <!-- Delete Button -->
+                        <form th:action="@{/runs/delete}" method="post" class="m-0">
+                            <input type="hidden" th:name="runId" th:value="${run.id}" />
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </div>
+                </div>
             </td>
+
+
         </tr>
         </tbody>
     </table>
@@ -85,6 +90,7 @@
                         <label for="runDate" class="form-label">Date</label>
                         <input type="datetime-local" class="form-control" id="runDate" name="date" required>
                     </div>
+                    <input type="hidden" name="creator" th:value="${session.userEmail}" />
                     <button type="submit" class="btn btn-primary">Create Run</button>
                 </form>
             </div>

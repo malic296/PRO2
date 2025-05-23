@@ -25,20 +25,18 @@ CREATE TABLE users (
     FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE SET NULL  -- Foreign key to team table
 );
 
+INSERT INTO users (email, encrypted_password, is_admin, team_id) VALUES
+('janmalek21JM@gmail.com', '777c3b1e43076cc212b7409cbe49cb3f527fa446068f164a86f605e93217673d', TRUE, 1);
+
 -- Create the "run" table
 CREATE TABLE run (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
     address VARCHAR(255),
-    date TIMESTAMP NOT NULL
+    date TIMESTAMP NOT NULL,
+	creator VARCHAR(255) NOT NULL
 );
-
--- Fast insert into the "run" table (insert multiple runs)
-INSERT INTO run (name, description, address, date) VALUES
-    ('5K Charity Run', 'A charity run event', 'Central Park', '2025-06-01 08:00:00'),
-    ('Marathon', 'A 42.195km marathon', 'Downtown', '2025-07-10 07:00:00'),
-    ('Relay Race', 'Team relay race', 'Stadium A', '2025-08-15 09:00:00');
 
 -- Create the "race" table
 CREATE TABLE race (
@@ -47,14 +45,9 @@ CREATE TABLE race (
     description TEXT,
     address VARCHAR(255),
     date TIMESTAMP NOT NULL,
-    capacity INT NOT NULL
+    capacity INT NOT NULL,
+	creator VARCHAR(255) NOT NULL
 );
-
--- Fast insert into the "race" table (insert multiple races)
-INSERT INTO race (name, description, address, date, capacity) VALUES
-    ('Summer Sprint', 'A short race for speed enthusiasts', 'Race Track A', '2025-06-05 10:00:00', 100),
-    ('Night Run', 'A race to be run in the evening with lights', 'City Center', '2025-06-20 19:00:00', 200),
-    ('Cross Country Challenge', 'An off-road race with various obstacles', 'Mountain Trail', '2025-07-25 07:30:00', 150);
 
 -- Create the "user_run" table (many-to-many relationship between "users" and "run")
 CREATE TABLE user_run (
