@@ -39,4 +39,10 @@ public class UserRunService {
                 .map(userRun -> userRun.getRun().getId())
                 .toList();
     }
+
+    public List<User> getUsersByRun(Run run) {
+        return userRunRepository.findByRun(run).stream()
+                .map(UserRun::getUser)
+                .toList();
+    }
 }

@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 @Service
 public class RunService {
@@ -22,9 +24,13 @@ public class RunService {
     }
 
     public List<Run> getUpcomingRuns() {
-        LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
-        return runRepository.findByDateAfterOrderByDateAsc(startOfToday);
+        LocalDateTime now = LocalDateTime.now();
+        return runRepository.findAll().stream()
+                .filter(run -> run.getDate().isAfter(now))
+                .sorted(Comparator.comparing(Run::getDate)) // sort by date ascending
+                .collect(Collectors.toList());
     }
+
 
     public List<Run> getPastRuns() {
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
@@ -32,6 +38,9 @@ public class RunService {
     }
 
     public void createRun(String name, String description, String address, LocalDateTime date, String creator) {
+        if (date.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Cannot create a run in the past.");
+        }
         Run run = new Run();
         run.setName(name);
         run.setDescription(description);
@@ -43,6 +52,9 @@ public class RunService {
     }
 
     public void editRun(Long id, String name, String description, String address, LocalDateTime date) {
+        if (date.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Cannot create a run in the past.");
+        }
         Optional<Run> optionalRun = runRepository.findById(id);
         if (optionalRun.isPresent()) {
             Run run = optionalRun.get();

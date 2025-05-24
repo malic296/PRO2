@@ -1,1 +1,52 @@
-<h2>Teams</h2>
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-primary display-5">🌟 Team Statistics</h2>
+        <p class="text-muted">Track your team's performance across activities</p>
+    </div>
+
+    <!-- Completed Activities -->
+    <div class="card shadow mb-5">
+        <div class="card-header bg-success text-white text-center">
+            <h4 class="mb-0">✅ Completed Activities</h4>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover table-bordered align-middle mb-0">
+                <thead class="table-light text-center">
+                <tr>
+                    <th>Team</th>
+                    <th>Completed Count</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="team : ${teams}" class="text-center">
+                    <td th:text="${team.name}"></td>
+                    <td th:text="${completedStats[team.name]} ?: 0"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Signed Up Activities -->
+    <div class="card shadow">
+        <div class="card-header bg-info text-white text-center">
+            <h4 class="mb-0">📝 Signed Up Activities</h4>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover table-bordered align-middle mb-0">
+                <thead class="table-light text-center">
+                <tr>
+                    <th>Team</th>
+                    <th>Signed Up Count</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="team : ${teams}" class="text-center">
+                    <td th:text="${team.name}"></td>
+                    <td th:text="${upcomingStats[team.name]} ?: 0"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -12,4 +12,5 @@ public interface UserRunRepository extends JpaRepository<UserRun, Long> {
     Optional<UserRun> findByUserAndRun(User user, Run run);
     List<UserRun> findByUser(User user);
     void deleteByUserAndRun(User user, Run run);
+    List<UserRun> findByRun(Run run);
 }

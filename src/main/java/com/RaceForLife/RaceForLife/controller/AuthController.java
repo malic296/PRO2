@@ -48,7 +48,7 @@ public class AuthController {
             else{
                 session.setAttribute("isAdmin", false);
             }
-            return "main";
+            return "redirect:/myStats";
         } else {
             model.addAttribute("error", "Invalid credentials");
             return "login";
@@ -72,7 +72,7 @@ public class AuthController {
             session.setAttribute("userEmail", email);
             session.setAttribute("isAdmin", false);
             model.addAttribute("content", "myStats.html");
-            return "main";
+            return "redirect:/myStats";
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             return "register";
@@ -82,39 +82,6 @@ public class AuthController {
     @GetMapping("/main")
     public String main() {
         return "main";
-    }
-
-    @GetMapping("/races")
-    public String races(HttpSession session, Model model) {
-        String userEmail = (String) session.getAttribute("userEmail");
-        if (userEmail != null) {
-            model.addAttribute("content", "races.html");
-            return "main";
-        } else {
-            return "redirect:/login";
-        }
-    }
-
-    @GetMapping("/teams")
-    public String teams(HttpSession session, Model model) {
-        String userEmail = (String) session.getAttribute("userEmail");
-        if (userEmail != null) {
-            model.addAttribute("content", "teams.html");
-            return "main";
-        } else {
-            return "redirect:/login";
-        }
-    }
-
-    @GetMapping("/myStats")
-    public String myStats(HttpSession session, Model model) {
-        String userEmail = (String) session.getAttribute("userEmail");
-        if (userEmail != null) {
-            model.addAttribute("content", "myStats.html");
-            return "main";
-        } else {
-            return "redirect:/login";
-        }
     }
 
     @PostMapping("/logout")

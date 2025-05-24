@@ -2,6 +2,8 @@ package com.RaceForLife.RaceForLife.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -19,8 +21,17 @@ public class User {
     @Column(name = "is_admin", nullable = false)
     private boolean isAdmin;
 
-    @Column(name = "team_id", nullable = false)
-    private int team;
+    @ManyToOne
+    @JoinColumn(name = "team_id", referencedColumnName = "id")
+    private Team team;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_run",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "run_id")
+    )
+    private List<Run> runs;
 
     public Long getId() {
         return id;
@@ -33,7 +44,6 @@ public class User {
     public String getEmail() {
         return email;
     }
-    public int getTeam(){return team;}
 
     public void setEmail(String email) {
         this.email = email;
@@ -54,8 +64,23 @@ public class User {
     public void setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
     }
-    public void setTeam(int team) {
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
         this.team = team;
     }
+
+    public List<Run> getRuns() {
+        return runs;
+    }
+
+    public void setRuns(List<Run> runs) {
+        this.runs = runs;
+    }
+
 }
+
 

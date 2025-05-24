@@ -1,1 +1,22 @@
-<h2 th:each="int : ${test}"><span th:text="${int}"></span></h2>
+<div class="d-flex flex-column align-items-center text-center my-5">
+    <div class="mb-3">
+        <h3>You're competing for:</h3>
+        <th:block th:switch="${usersTeam}">
+            <span th:case="'Red'" class="badge bg-danger fs-3 px-4 py-2" th:text="${usersTeam}">Team Name</span>
+            <span th:case="'Green'" class="badge bg-success fs-3 px-4 py-2" th:text="${usersTeam}">Team Name</span>
+            <span th:case="'Blue'" class="badge bg-primary fs-3 px-4 py-2" th:text="${usersTeam}">Team Name</span>
+            <span th:case="*"
+                  class="badge bg-secondary fs-3 px-4 py-2" th:text="${usersTeam}">Team Name</span>
+        </th:block>
+    </div>
+
+    <div class="mb-3">
+        <h3>Finished Activities:</h3>
+        <span class="badge bg-success fs-3 px-4 py-2" th:text="${finishedActivities}">0</span>
+    </div>
+
+    <div>
+        <h3>Signed-up Activities:</h3>
+        <span class="badge bg-primary fs-3 px-4 py-2" th:text="${signedUpActivities}">0</span>
+    </div>
+</div>
